@@ -52,6 +52,7 @@ pub enum CellValue {
     String(String),
     Blank(usize),
     SharedString(String),
+    Formula(String),
 }
 
 pub struct SheetWriter<'a, 'b>
@@ -81,13 +82,17 @@ impl ToCellValue for f64 {
 
 impl ToCellValue for String {
     fn to_cell_value(&self) -> CellValue {
-        CellValue::String(self.to_owned())
+        if self.starts_with("=") {
+            CellValue::Formula(self.trim_start_matches('=').to_owned())
+        } else {
+            CellValue::String(self.to_owned())
+        }
     }
 }
 
 impl<'a> ToCellValue for &'a str {
     fn to_cell_value(&self) -> CellValue {
-        CellValue::String(self.to_owned().to_owned())
+        self.to_string().to_cell_value()
     }
 }
 
@@ -189,6 +194,10 @@ fn write_value(cv: &CellValue, ref_id: String, writer: &mut dyn Write) -> Result
         }
         CellValue::SharedString(ref s) => {
             let s = format!("<c r=\"{}\" t=\"s\"><v>{}</v></c>", ref_id, s);
+            writer.write_all(s.as_bytes())?;
+        }
+        CellValue::Formula(ref s) => {
+            let s = format!("<c r=\"{}\" t=\"str\"><f>{}</f></c>", ref_id, s);
             writer.write_all(s.as_bytes())?;
         }
         CellValue::Blank(_) => {}
