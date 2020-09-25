@@ -32,14 +32,16 @@
 //!         sw.append_row(row!["Name", "Title","Success","XML Remark"])?;
 //!         sw.append_row(row!["Amy", (), true,"<xml><tag>\"Hello\" & 'World'</tag></xml>"])?;
 //!         sw.append_blank_rows(2);
-//!         sw.append_row(row!["Tony", blank!(30), "retired"])
+//!         sw.append_row(row!["Tony", blank!(30), "retired"])?;
+//!         Ok(())
 //!     }).expect("write excel error!");
 //!
 //!     let mut sheet = wb.create_sheet("Sheet2");
 //!     wb.write_sheet(&mut sheet, |sheet_writer| {
 //!         let sw = sheet_writer;
 //!         sw.append_row(row!["Name", "Title","Success","Remark"])?;
-//!         sw.append_row(row!["Amy", "Manager", true])
+//!         sw.append_row(row!["Amy", "Manager", true])?;
+//!         Ok(())
 //!     }).expect("write excel error!");
 //!
 //!     wb.close().expect("close excel error!");

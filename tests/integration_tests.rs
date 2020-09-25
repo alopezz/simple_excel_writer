@@ -32,7 +32,8 @@ fn creates_and_saves_an_excel_sheet_driver(filename: Option<&str>) -> Option<Vec
             "<xml><tag>\"Hello\" & 'World'</tag></xml>"
         ])
         .unwrap();
-        sw.append_row(row!["Marly", "Mary", "Success", "Success", true, 500.])
+        sw.append_row(row!["Marly", "Mary", "Success", "Success", true, 500.])?;
+        Ok(())
     })
     .expect("Write excel error!");
 
@@ -40,7 +41,8 @@ fn creates_and_saves_an_excel_sheet_driver(filename: Option<&str>) -> Option<Vec
 
     wb.write_sheet(&mut ws, |sw| {
         sw.append_row(row!["Name", "Title", "Success"]).unwrap();
-        sw.append_row(row!["Mary", "This", true])
+        sw.append_row(row!["Mary", "This", true])?;
+        Ok(())
     })
     .expect("Write excel error!");
 
@@ -48,14 +50,16 @@ fn creates_and_saves_an_excel_sheet_driver(filename: Option<&str>) -> Option<Vec
 
     wb.write_sheet(&mut ws, |sw| {
         sw.append_row(row!["Name", "Title", "Success"]).unwrap();
-        sw.append_row(row!["Mary", "Sgt Monkey", true])
+        sw.append_row(row!["Mary", "Sgt Monkey", true])?;
+        Ok(())
     })
     .expect("Write excel error!");
 
     let mut ws = wb.create_sheet("test_sheet_with_formulas");
 
     wb.write_sheet(&mut ws, |sw| {
-        sw.append_row(row!["1", "2", "3", "=sum(a1:c1)"])
+        sw.append_row(row!["1", "2", "3", "=sum(a1:c1)"])?;
+        Ok(())
     })
     .expect("Write excel error!");
 

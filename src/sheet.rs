@@ -261,13 +261,14 @@ impl Sheet {
         self.columns.push(column)
     }
 
-    fn write_row<W>(&mut self, writer: &mut W, mut row: Row) -> Result<()>
+    fn write_row<W>(&mut self, writer: &mut W, mut row: Row) -> Result<usize>
     where
         W: Write + Sized,
     {
         self.max_row_index += 1;
         row.row_index = self.max_row_index;
-        row.write(writer)
+        row.write(writer)?;
+        Ok(row.row_index)
     }
 
     fn write_blank_rows(&mut self, rows: usize) {
@@ -330,7 +331,7 @@ impl<'a, 'b> SheetWriter<'a, 'b> {
         }
     }
 
-    pub fn append_row(&mut self, row: Row) -> Result<()> {
+    pub fn append_row(&mut self, row: Row) -> Result<usize> {
         self.sheet
             .write_row(self.writer, row.replace_strings(&mut self.shared_strings))
     }
